@@ -1,0 +1,53 @@
+{
+    "cars": [
+        {
+            "name": "McLaren 675LT",
+            "label": "675lt",
+            "price": 2240000,
+            "category": "importados",
+            "imglink": "https://img.gta5-mods.com/q95/images/2016-mclaren-675lt-coupe-zen-imogen-zenzoit-ngr_ardiansyah/c35070-Screenshot%20(697).jpg"
+        },
+        {
+            "name": "Adder",
+            "label": "adder",
+            "price": 2000000,
+            "category": "vips",
+            "imglink": "http://www.gta5rides.com/vehicleImages/cropped/adder.jpg"
+        },
+        {
+            "name": "LaFerrari Aperta",
+            "label": "aperta",
+            "price": 2240000,
+            "category": "importados",
+            "imglink": "https://img.gta5-mods.com/q95/images/ferrari-laferrari-aperta-2017-answer/251dfe-QQ%E6%88%AA%E5%9B%BE20190219135627.jpg"
+        },
+        {
+            "name": "Aston Martin Vanquish",
+            "label": "ast",
+            "price": 1040000,
+            "category": "importados",
+            "imglink": "https://img.gta5-mods.com/q95/images/2019-aston-martin-vantage-add-on-replace/9ebb74-LRM_EXPORT_20180503_162159.jpg"
+        },
+        {
+            "name": "Dukes",
+            "label": "dukes",
+            "price": 15000,
+            "category": "muscle",
+            "imglink": "https://wiki.rage.mp/images/thumb/6/6e/Dukes.png/164px-Dukes.png"
+        },
+        {
+            "name": "Mustang GT",
+            "label": "mgt",
+            "price": 430000,
+            "category": "importados",
+            "imglink": "https://img.gta5-mods.com/q95/images/ford-mustang-gt-2018-add-on-replace/08fd65-Boulevard%20Del%20Perro%20South%202018-07-24%2001-11-23.jpg"
+        },
+        {
+            "name": "Rapid GT",
+            "label": "rapdigt",
+            "price": 65000,
+            "category": "sports",
+            "imglink": "https://wiki.rage.mp/images/thumb/e/e9/Rapidgt.png/164px-Rapidgt.png"
+        }
+    ]
+}
