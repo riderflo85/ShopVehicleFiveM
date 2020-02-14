@@ -55,11 +55,14 @@ $(document).ready(function(){
         }
         $("#page-"+page).show();
     });
-
+    
+    
+    
+    /*
     window.addEventListener('message', function(event) {
         var data = event.data;
 
-        /* for debug */
+        * for debug *
         var forDebug = document.getElementById('debug');
         forDebug.innerText = `debug: ${data.show}`;
 
@@ -67,7 +70,7 @@ $(document).ready(function(){
             console.log(data.categ[i].name);
         }
 
-        /* ********** */
+        * ********** *
 
         if (data.show) {
             let apage = 1;
@@ -160,5 +163,5 @@ $(document).ready(function(){
                             apage = apage +1;
             }
         }    
-    });
+    });*/
 });
