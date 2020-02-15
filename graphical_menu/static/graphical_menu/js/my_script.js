@@ -74,17 +74,28 @@ $(document).ready(function(){
             dataType: 'json',
             data: {"listing": "okay"},
             success: function(data) {
-                var foo = JSON.parse(data.cars) //foo[i].fields -> listed all fields in the models
-                var listCateg = [];
-
-                for (let i = 0; i < foo.length; i++) {
-                    if (!listCateg.includes(foo[i].fields.category)) {
-                        listCateg.push(foo[i].fields.category);
+                var vehModels = JSON.parse(data.cars) // vehModels[i].fields -> listed all fields in the models
+                var vehs = [] // stocks all vehicles with their attributes
+                var listCateg = []; // stocks all category of the vehicle
+                
+                for (let i = 0; i < vehModels.length; i++) {
+                    if (!listCateg.includes(vehModels[i].fields.category)) {
+                        listCateg.push(vehModels[i].fields.category);
                     } else {
                         // pass
                     }
+                    vehs.push(vehModels[i].fields);
                 }
                 console.log(listCateg);
+                console.log(vehs);
+
+                /* For filter vehicle by category */
+                const vehFilter = (arr, categ) => {
+                    return arr.filter(el => el.category === categ);
+                };
+                /* ****************************** */
+
+                console.log(vehFilter(vehs, 'sport'));
 
                 for (let i = 0; i < listCateg.length; i++) {
                     dropdown.append(
