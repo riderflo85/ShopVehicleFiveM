@@ -1,12 +1,14 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+from django.core.serializers import serialize
 from .models import Vehicle
 
 
 def index(request):
-    context = {}
+    if request.method == 'POST':
+        if request.POST['listing'] == "okay":
+            return JsonResponse({"cars": serialize('json', Vehicle.objects.all())})
 
-    all_vehicle = Vehicle.objects.all()
-    context["vehicles"] = all_vehicle
-
-    return render(request, 'graphical_menu/index.html', context)
+    else:
+        return render(request, 'graphical_menu/index.html')
 

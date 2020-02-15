@@ -56,7 +56,41 @@ $(document).ready(function(){
         $("#page-"+page).show();
     });
     
-    
+    $("#btnValid").click(function () {
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $.ajax({
+            url: '',
+            type: 'POST',
+            dataType: 'json',
+            data: {"listing": "okay"},
+            success: function(data) {
+                var foo = JSON.parse(data.cars) //foo[i].fields -> listed all fields in the models
+                var listCateg = [];
+
+                for (let i = 0; i < foo.length; i++) {
+                    if (!listCateg.includes(foo[i].fields.category)) {
+                        listCateg.push(foo[i].fields.category);
+                    } else {
+                        // pass
+                    }
+                }
+                console.log(listCateg);
+            },
+            error: function(error) {
+                console.warn(error);
+            }
+        });
+
+    });
     
     /*
     window.addEventListener('message', function(event) {
