@@ -57,6 +57,7 @@ $(document).ready(function(){
     });
     
     $("#btnValid").click(function () {
+        var dropdown = $("#dropdownVehicle");
         var csrftoken = getCookie('csrftoken');
 
         $.ajaxSetup({
@@ -84,6 +85,16 @@ $(document).ready(function(){
                     }
                 }
                 console.log(listCateg);
+
+                for (let i = 0; i < listCateg.length; i++) {
+                    dropdown.append(
+                        `<i class="dropdown-item" id="${listCateg[i]}">${listCateg[i]}</i>`
+                    );
+                    $(`#${listCateg[i]}`).click(function () {
+                        console.log(`click sur la catégorie ${listCateg[i]}`);
+                    });
+                }
+
             },
             error: function(error) {
                 console.warn(error);
