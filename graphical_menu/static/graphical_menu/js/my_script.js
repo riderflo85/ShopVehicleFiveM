@@ -19,6 +19,37 @@ function CloseShop() {
 }
 
 
+function displayVehicle(listVeh) {
+    var apage = 1;
+    var line = 1;
+    var contentParent = $("#wrapper");
+    $(`#page-${apage}`).remove();
+    contentParent.append(`<div id="page-${apage}"></div>`);
+    var contentLine = $(`#page-${apage}`);
+
+    if (listVeh.length <=  3) {
+        contentLine.append(`<div class='row my-2' id='contentLine${line}'></div>`);
+        var contentCol = $(`#contentLine${line}`);
+
+        for (let i = 0; i < listVeh.length; i++) {
+            var forAppend = `
+                <div class="col">
+                    <div class="card" style="border:0">
+                        <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${listVeh[i].name}</h5>
+                            <p class="card-text">Categoria: <b>${listVeh[i].category}</b></p>
+                            <p class="card-text">Valor: <b>R$${listVeh[i].price}</b></p>
+                            <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            contentCol.append(forAppend);
+        }
+    }
+}
+
 $(document).keyup(function(e) {
      if (e.key === "Escape") {
         CloseShop()
@@ -95,7 +126,7 @@ $(document).ready(function(){
                 };
                 /* ****************************** */
 
-                console.log(vehFilter(vehs, 'sport'));
+                // console.log(vehFilter(vehs, 'sport'));
 
                 for (let i = 0; i < listCateg.length; i++) {
                     dropdown.append(
@@ -103,6 +134,10 @@ $(document).ready(function(){
                     );
                     $(`#${listCateg[i]}`).click(function () {
                         console.log(`click sur la catégorie ${listCateg[i]}`);
+                        const catSelect = `<h5 class="text-white cat-selected" id="catSelected">${listCateg[i]}</h5>`;
+                        $("#catSelected").replaceWith(catSelect);
+                        console.log(vehFilter(vehs, listCateg[i]));
+                        displayVehicle(vehFilter(vehs, listCateg[i]));
                     });
                 }
 
