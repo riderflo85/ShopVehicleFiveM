@@ -13,6 +13,8 @@
 */
 
 function CloseShop() {
+    /* to avoid duplication in the menu */
+    $("#dropdownVehicle").html('');
     $("#wrapper").html('');
 	$("#shopmenu").hide();
     $.post('http://esx_vehicleshop/CloseMenu', JSON.stringify({}));
@@ -38,14 +40,40 @@ function displayVehicle(listVeh) {
                         <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">${listVeh[i].name}</h5>
-                            <p class="card-text">Categoria: <b>${listVeh[i].category}</b></p>
-                            <p class="card-text">Valor: <b>R$${listVeh[i].price}</b></p>
-                            <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
+                            <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
+                            <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
+                            <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                         </div>
                     </div>
                 </div>
             `;
             contentCol.append(forAppend);
+        }
+    } else if (listVeh.length <= 6) {
+        contentLine.append(`<div class='row my-2' id='contentLine${line}'></div>`);
+        var contentCol = $(`#contentLine${line}`);
+
+        for (let i = 0; i < listVeh.length; i++) {
+            if (i <= 6) {
+                if (i === 3) {
+                    contentLine.append(`<div class='row my-2' id='contentLine${line+1}'></div>`);
+                    contentCol = $(`#contentLine${line+1}`);
+                }
+                var forAppend = `
+                    <div class="col">
+                        <div class="card" style="border:0">
+                            <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">${listVeh[i].name}</h5>
+                                <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
+                                <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
+                                <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                contentCol.append(forAppend);
+            }
         }
     }
 }
@@ -157,7 +185,7 @@ $(document).ready(function(){
         var forDebug = document.getElementById('debug');
         forDebug.innerText = `debug: ${data.show}`;
 
-        for (const i = 0; i < data.categ.length; i++) {
+        for (let i = 0; i < data.categ.length; i++) {
             console.log(data.categ[i].name);
         }
 
@@ -183,9 +211,9 @@ $(document).ready(function(){
                                                 <img src="`+data.cars[st].imglink+`" class="card-img-top" alt="...">
                                                 <div class="card-body">
                                                     <h5 class="card-title">`+data.cars[st].name+`</h5>
-                                                    <p class="card-text">Categoria: <b>`+data.cars[st].category+`</b></p>
-                                                    <p class="card-text">Valor: <b>R$`+data.cars[st].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action1" data-id="`+ st +`" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
+                                                    <p class="card-text">Categorie: <b>`+data.cars[st].category+`</b></p>
+                                                    <p class="card-text">Prix: <b>R$`+data.cars[st].price+`</b></p>
+                                                    <p class="card-text"><button type="button" id="action1" data-id="`+ st +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -194,9 +222,9 @@ $(document).ready(function(){
                                                 <img src="`+data.cars[nd].imglink+`" class="card-img-top" alt="...">
                                                 <div class="card-body">
                                                     <h5 class="card-title">`+data.cars[nd].name+`</h5>
-                                                    <p class="card-text">Categoria: <b>`+data.cars[nd].category+`</b></p>
-                                                    <p class="card-text">Valor: <b>R$`+data.cars[nd].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action2" data-id="`+ nd +`" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
+                                                    <p class="card-text">Categorie: <b>`+data.cars[nd].category+`</b></p>
+                                                    <p class="card-text">Prix: <b>R$`+data.cars[nd].price+`</b></p>
+                                                    <p class="card-text"><button type="button" id="action2" data-id="`+ nd +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                                                 </div>
                                             </div>  
                                         </div>
@@ -205,9 +233,9 @@ $(document).ready(function(){
                                                 <img src="`+data.cars[rd].imglink+`" class="card-img-top" alt="...">
                                                 <div class="card-body">
                                                     <h5 class="card-title">`+data.cars[rd].name+`</h5>
-                                                    <p class="card-text">Categoria: <b>`+data.cars[rd].category+`</b></p>
-                                                    <p class="card-text">Valor: <b>R$`+data.cars[rd].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action3" data-id="`+ rd +`" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
+                                                    <p class="card-text">Categorie: <b>`+data.cars[rd].category+`</b></p>
+                                                    <p class="card-text">Prix: <b>R$`+data.cars[rd].price+`</b></p>
+                                                    <p class="card-text"><button type="button" id="action3" data-id="`+ rd +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                                                 </div>
                                             </div>    
                                         </div>
@@ -218,9 +246,9 @@ $(document).ready(function(){
                                                 <img src="`+data.cars[th].imglink+`" class="card-img-top" alt="...">
                                                 <div class="card-body">
                                                     <h5 class="card-title">`+data.cars[th].name+`</h5>
-                                                    <p class="card-text">Categoria: <b>`+data.cars[th].category+`</b></p>
-                                                    <p class="card-text">Valor: <b>R$`+data.cars[th].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action1" data-id="`+ th +`" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
+                                                    <p class="card-text">Categorie: <b>`+data.cars[th].category+`</b></p>
+                                                    <p class="card-text">Prix: <b>R$`+data.cars[th].price+`</b></p>
+                                                    <p class="card-text"><button type="button" id="action1" data-id="`+ th +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -229,9 +257,9 @@ $(document).ready(function(){
                                                 <img src="`+data.cars[kh].imglink+`" class="card-img-top" alt="...">
                                                 <div class="card-body">
                                                     <h5 class="card-title">`+data.cars[kh].name+`</h5>
-                                                    <p class="card-text">Categoria: <b>`+data.cars[kh].category+`</b></p>
-                                                    <p class="card-text">Valor: <b>R$`+data.cars[kh].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action2" data-id="`+ kh +`" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
+                                                    <p class="card-text">Categorie: <b>`+data.cars[kh].category+`</b></p>
+                                                    <p class="card-text">Prix: <b>R$`+data.cars[kh].price+`</b></p>
+                                                    <p class="card-text"><button type="button" id="action2" data-id="`+ kh +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                                                 </div>
                                             </div>  
                                         </div>
@@ -240,9 +268,9 @@ $(document).ready(function(){
                                                 <img src="`+data.cars[lh].imglink+`" class="card-img-top" alt="...">
                                                 <div class="card-body">
                                                     <h5 class="card-title">`+data.cars[lh].name+`</h5>
-                                                    <p class="card-text">Categoria: <b>`+data.cars[lh].category+`</b></p>
-                                                    <p class="card-text">Valor: <b>R$`+data.cars[lh].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action3" data-id="`+ lh +`" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
+                                                    <p class="card-text">Categorie: <b>`+data.cars[lh].category+`</b></p>
+                                                    <p class="card-text">Prix: <b>R$`+data.cars[lh].price+`</b></p>
+                                                    <p class="card-text"><button type="button" id="action3" data-id="`+ lh +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                                                 </div>
                                             </div>    
                                         </div>
