@@ -21,7 +21,7 @@ function CloseShop() {
 }
 
 
-function newDisplayVehicle(listVeh, page) {
+function displayVehicle(listVeh, page) {
     var apage = 1;
     var nbPage = Math.ceil(listVeh.length/6);
     var line = 1;
@@ -162,7 +162,7 @@ $(document).ready(function(){
                         const catSelect = `<h5 class="text-white cat-selected" id="catSelected">${listCateg[i]}</h5>`;
                         $("#catSelected").replaceWith(catSelect);
                         console.log(vehFilter(vehs, listCateg[i]));
-                        mpage = newDisplayVehicle(vehFilter(vehs, listCateg[i]), page);
+                        mpage = displayVehicle(vehFilter(vehs, listCateg[i]), page);
                     });
                 }
 
