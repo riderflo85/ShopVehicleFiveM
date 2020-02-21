@@ -21,61 +21,58 @@ function CloseShop() {
 }
 
 
-function displayVehicle(listVeh) {
+function newDisplayVehicle(listVeh, page) {
     var apage = 1;
+    var nbPage = Math.ceil(listVeh.length/6);
     var line = 1;
-    var contentParent = $("#wrapper");
+    var wrapper = $("#wrapper");
+    var pageVeh;
+    var rowBt;
+
     $(`#page-${apage}`).remove();
-    contentParent.append(`<div id="page-${apage}"></div>`);
-    var contentLine = $(`#page-${apage}`);
 
-    if (listVeh.length <=  3) {
-        contentLine.append(`<div class='row my-2' id='contentLine${line}'></div>`);
-        var contentCol = $(`#contentLine${line}`);
-
-        for (let i = 0; i < listVeh.length; i++) {
-            var forAppend = `
-                <div class="col">
-                    <div class="card" style="border:0">
-                        <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">${listVeh[i].name}</h5>
-                            <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
-                            <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
-                            <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
-                        </div>
+    for (let i = 0; i < listVeh.length; i++) {
+        if (i === 0) {
+            wrapper.append(`<div id="page-${apage}"></div>`);
+            pageVeh = $(`#page-${apage}`);
+            pageVeh.append(`<div class='row my-2' id='contentLine${line}'></div>`);
+            rowBt = $(`#contentLine${line}`);
+        }
+        var oneVehicle = `
+            <div class="col">
+                <div class="card" style="border:0">
+                    <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${listVeh[i].name}</h5>
+                        <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
+                        <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
+                        <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                     </div>
                 </div>
-            `;
-            contentCol.append(forAppend);
-        }
-    } else if (listVeh.length <= 6) {
-        contentLine.append(`<div class='row my-2' id='contentLine${line}'></div>`);
-        var contentCol = $(`#contentLine${line}`);
-
-        for (let i = 0; i < listVeh.length; i++) {
-            if (i <= 6) {
-                if (i === 3) {
-                    contentLine.append(`<div class='row my-2' id='contentLine${line+1}'></div>`);
-                    contentCol = $(`#contentLine${line+1}`);
-                }
-                var forAppend = `
-                    <div class="col">
-                        <div class="card" style="border:0">
-                            <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">${listVeh[i].name}</h5>
-                                <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
-                                <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
-                                <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                contentCol.append(forAppend);
+            </div>
+        `;
+        if (i%6 === 3) {
+            pageVeh.append(`<div class='row my-2' id='contentLine${line+1}'></div>`);
+            rowBt = $(`#contentLine${line+1}`);
+            line = line + 1; 
+            console.log('ajout d une row');
+        } else if (i%6 === 0) {
+            if (i !== 0) {
+                wrapper.append(`<div id="page-${apage+1}"></div>`);
+                pageVeh = $(`#page-${apage+1}`);
+                pageVeh.append(`<div class='row my-2' id='contentLine${line+1}'></div>`);
+                rowBt = $(`#contentLine${line+1}`);
+                line = line + 1;
+                apage = apage + 1;
+                console.log('ajout d une page');
             }
         }
+        rowBt.append(oneVehicle);
+        if (apage !== page) {
+            $("#page-" + apage).hide();
+        }
     }
+    return nbPage;
 }
 
 $(document).keyup(function(e) {
@@ -165,7 +162,7 @@ $(document).ready(function(){
                         const catSelect = `<h5 class="text-white cat-selected" id="catSelected">${listCateg[i]}</h5>`;
                         $("#catSelected").replaceWith(catSelect);
                         console.log(vehFilter(vehs, listCateg[i]));
-                        displayVehicle(vehFilter(vehs, listCateg[i]));
+                        mpage = newDisplayVehicle(vehFilter(vehs, listCateg[i]), page);
                     });
                 }
 
