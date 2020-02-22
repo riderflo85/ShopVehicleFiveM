@@ -230,7 +230,32 @@ $(document).ready(function(){
         console.log(allVehicles);
 
     });
-    
+
+    $("#ValidSearchVeh").click(function () {
+        page = 1;
+        mpage = 0;
+        let contentSearch = $("#fieldSearchVeh")[0].value
+
+        /* For filter vehicle by model */
+        const vehFilter = (arr, modelName) => {
+            return arr.filter(el => el.name.toLowerCase().includes(modelName));
+        };
+        /* ****************************** */
+
+        let vehs = vehFilter(allVehicles, contentSearch);
+        if (vehs.length > 0) {
+            mpage = displayVehicle(vehs, page);
+        }else {
+            $("#wrapper").html('');
+            $("#wrapper").append(`
+                <div class='text-center text-not-match'>
+                    <h3 class='text-white'>Aucun véhicule ne corresponds à votre recherche: <strong class='text-warning'>"${contentSearch}"</strong>.</h3>
+                    <h3 class='text-white'>Vérifier l'orthographe</h3>
+                </div>
+            `);
+        }
+    });
+
     /*
     window.addEventListener('message', function(event) {
         var data = event.data;
