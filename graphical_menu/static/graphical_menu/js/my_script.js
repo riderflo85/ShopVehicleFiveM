@@ -46,7 +46,7 @@ function displayVehicle(listVeh, page) {
                         <h5 class="card-title">${listVeh[i].name}</h5>
                         <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
                         <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
-                        <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+                        <p class="card-text"><button type="button" id="action1" data-id="${i}" data-label="${listVeh[i].model}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                     </div>
                 </div>
             </div>
@@ -75,6 +75,13 @@ function displayVehicle(listVeh, page) {
     return nbPage;
 }
 
+
+function findVehicleForPurchase(listVeh, labelVehicle) {
+    const purchaseVehicle = (el) => el.model === labelVehicle;
+    return listVeh.findIndex(purchaseVehicle); 
+}
+
+
 $(document).keyup(function(e) {
      if (e.key === "Escape") {
         CloseShop()
@@ -85,11 +92,20 @@ $(document).ready(function(){
 
     var page = 1;
     var mpage = 0;
+    // allVehicles variable is assigned later in the code (line 190)
+    var allVehicles;
+
+    // $(".card-body").on('click', ':button', function () {
+    //     var idVeh = findVehicleForPurchase(allVehicles, $(this).data('label'));
+    //     $("#shopmenu").hide();
+    //     $("#wrapper").html('');
+    //     $.post('http://esx_vehicleshop/BuyVehicle', JSON.stringify({id: idVeh}));
+    // });
 
     $(".card-body").on('click', ':button', function () {
-        $("#shopmenu").hide();
-        $("#wrapper").html('');
-        $.post('http://esx_vehicleshop/BuyVehicle', JSON.stringify({id: $(this).data('id')}));
+        var idVeh = findVehicleForPurchase(allVehicles, $(this).data('label'));
+        console.log('id veh: ' + idVeh);
+        console.log($(this).data('label'));
     });
 
     $("#close").click(function() {
@@ -171,7 +187,7 @@ $(document).ready(function(){
                         mpage = displayVehicle(vehFilter(vehs, listCateg[i]), page);
                     });
                 }
-
+                allVehicles = vehs;
             },
             error: function(error) {
                 console.warn(error);
