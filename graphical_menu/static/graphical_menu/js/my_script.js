@@ -26,6 +26,7 @@ function displayVehicle(listVeh, page) {
     var nbPage = Math.ceil(listVeh.length/6);
     var line = 1;
     var wrapper = $("#wrapper");
+    wrapper.html('');
     var pageVeh;
     var rowBt;
 
