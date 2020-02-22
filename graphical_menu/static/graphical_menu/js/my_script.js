@@ -56,7 +56,7 @@ function displayVehicle(listVeh, page) {
             pageVeh.append(`<div class='row my-2' id='contentLine${line+1}'></div>`);
             rowBt = $(`#contentLine${line+1}`);
             line = line + 1; 
-            console.log('ajout d une row');
+            // console.log('ajout d une row');
         } else if (i%6 === 0) {
             if (i !== 0) {
                 wrapper.append(`<div id="page-${apage+1}"></div>`);
@@ -65,7 +65,7 @@ function displayVehicle(listVeh, page) {
                 rowBt = $(`#contentLine${line+1}`);
                 line = line + 1;
                 apage = apage + 1;
-                console.log('ajout d une page');
+                // console.log('ajout d une page');
             }
         }
         rowBt.append(oneVehicle);
@@ -93,7 +93,7 @@ $(document).ready(function(){
 
     var page = 1;
     var mpage = 0;
-    // allVehicles variable is assigned later in the code (line 190)
+    // allVehicles variable is assigned later in the code
     var allVehicles;
 
     // $(".card-body").on('click', ':button', function () {
@@ -105,8 +105,8 @@ $(document).ready(function(){
 
     $(".card-body").on('click', ':button', function () {
         var idVeh = findVehicleForPurchase(allVehicles, $(this).data('label'));
-        console.log('id veh: ' + idVeh);
-        console.log($(this).data('label'));
+        // console.log('id veh: ' + idVeh);
+        // console.log($(this).data('label'));
     });
 
     $("#close").click(function() {
@@ -159,8 +159,6 @@ $(document).ready(function(){
                     }
                     vehs.push(vehModels[i].fields);
                 }
-                console.log(listCateg);
-                console.log(vehs);
 
                 mpage = displayVehicle(vehs, page);
 
@@ -170,22 +168,23 @@ $(document).ready(function(){
                 };
                 /* ****************************** */
 
-                // console.log(vehFilter(vehs, 'sport'));
-
                 for (let i = 0; i < listCateg.length; i++) {
                     dropdown.append(
                         `<i class="dropdown-item" id="${listCateg[i]}">${listCateg[i]}</i>`
                     );
                     $(`#${listCateg[i]}`).click(function () {
-                        console.log(`click sur la catégorie ${listCateg[i]}`);
-                        const catSelect = `<h5 class="text-white cat-selected" id="catSelected">${listCateg[i]}</h5>`;
+                        const catSelect = `<p class="text-white cat-selected" id="catSelected">${listCateg[i]}</p>`;
+                        const typePrice = `<p class="text-white cat-selected" id="typePrice">Aucun tri de prix</p>`;
                         $("#catSelected").replaceWith(catSelect);
-                        console.log(vehFilter(vehs, listCateg[i]));
+                        $("#typePrice").replaceWith(typePrice);
+
                         /* For reset value by default */
                         page = 1;
                         mpage = 0;
                         /* ************************** */
-                        mpage = displayVehicle(vehFilter(vehs, listCateg[i]), page);
+
+                        allVehicles = vehFilter(vehs, listCateg[i]);
+                        mpage = displayVehicle(allVehicles, page);
                     });
                 }
                 allVehicles = vehs;
@@ -194,6 +193,41 @@ $(document).ready(function(){
                 console.warn(error);
             }
         });
+    });
+
+    $("#priceIncreasing").click(function () {
+        page = 1;
+        mpage = 0;
+        allVehicles = allVehicles.sort(function (a, b) {
+            if (a.price < b.price) {
+                return -1;
+            } else if (a.price > b.price) {
+                return 1;
+            }
+        });
+        mpage = displayVehicle(allVehicles, page);
+        const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix croissant</p>`;
+        $("#typePrice").replaceWith(typePrice);
+        console.log('prix par ordre croissant: ');
+        console.log(allVehicles);
+
+    });
+
+    $("#priceDecreasing").click(function () {
+        page = 1;
+        mpage = 0;
+        allVehicles = allVehicles.sort(function (a, b) {
+            if (a.price < b.price) {
+                return 1;
+            } else if (a.price > b.price) {
+                return -1;
+            }
+        });
+        mpage = displayVehicle(allVehicles, page);
+        const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix décroissant</p>`;
+        $("#typePrice").replaceWith(typePrice);
+        console.log('prix par ordre décroissant: ');
+        console.log(allVehicles);
 
     });
     

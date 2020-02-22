@@ -24,12 +24,19 @@
 					<div class="d-flex">
 						<div class="dropdown">
 							<i class="btn btn-primary dropdown-toggle" id="categoryBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégorie</i>
-							<div class="dropdown-menu" id="dropdownVehicle" aria-labelledby="categoryBtn">
+							<div class="dropdown-menu" id="dropdownVehicle" aria-labelledby="categoryBtn"></div>
+						</div>
+						<p class="text-white cat-selected" id="catSelected">Aucune categorie</p>
+						<!-- <p style="color: rgb(18, 216, 18);" id="debug">debug: </p> -->
+						<div class="dropdown">
+							<i class="btn btn-primary dropdown-toggle" id="PriceBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Prix</i>
+							<div class="dropdown-menu" id="dropdownPrice" aria-labelledby="priceBtn">
+								<i class="dropdown-item" id="priceIncreasing">Prix par ordre croissant</i>
+								<i class="dropdown-item" id="priceDecreasing">Prix par ordre décroissant</i>
 							</div>
 						</div>
-						<h5 class="text-white cat-selected" id="catSelected">Aucune categorie</h5>
-						<!-- <p style="color: rgb(18, 216, 18);" id="debug">debug: </p> -->
-						<i type="button" class="btn btn-success" id="btnValid">Afficher les véhicules</i>
+						<p class="text-white cat-selected" id="typePrice">Aucun tri de prix</p>
+						<i type="button" class="btn btn-success fas fa-car" id="btnValid"></i>
 					</div>
 					<i id="close" class="float-right fa-3x fas fa-sign-out-alt"></i>
 				</div>
