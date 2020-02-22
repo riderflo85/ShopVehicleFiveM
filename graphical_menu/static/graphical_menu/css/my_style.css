@@ -49,3 +49,8 @@ body {
     margin-left: 15px;
     padding: 5px;
 }
+
+.field-search {
+    width: 15vw;
+    margin-bottom: 12px;
+}
