@@ -145,6 +145,8 @@ $(document).ready(function(){
                 console.log(listCateg);
                 console.log(vehs);
 
+                mpage = displayVehicle(vehs, page);
+
                 /* For filter vehicle by category */
                 const vehFilter = (arr, categ) => {
                     return arr.filter(el => el.category === categ);
@@ -162,6 +164,10 @@ $(document).ready(function(){
                         const catSelect = `<h5 class="text-white cat-selected" id="catSelected">${listCateg[i]}</h5>`;
                         $("#catSelected").replaceWith(catSelect);
                         console.log(vehFilter(vehs, listCateg[i]));
+                        /* For reset value by default */
+                        page = 1;
+                        mpage = 0;
+                        /* ************************** */
                         mpage = displayVehicle(vehFilter(vehs, listCateg[i]), page);
                     });
                 }
