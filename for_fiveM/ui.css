@@ -46,6 +46,19 @@ body {
 }
 
 .cat-selected {
-    margin-left: 15px;
+    margin-left: 10px;
+    margin-right: 20px;
     padding: 5px;
+}
+
+.field-search {
+    width: 15vw;
+    margin-bottom: 12px;
+    margin-left: 100px;
+}
+
+.text-not-match {
+    margin: auto;
+    margin-top: 70px;
+    margin-bottom: 70px;
 }

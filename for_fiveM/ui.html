@@ -12,7 +12,7 @@
         <div id="shopmenu" class="card mt-5 bg-dark" style="border:0;display:none">
         <!-- <div id="shopmenu" class="card mt-5 bg-dark"> -->
   			<div class="card-header bg-danger text-white unselectable" unselectable="on" onselectstart="return false;" onmousedown="return false;">
-    			Concessionária
+    			Concessionnaire
   			</div>
   			<div class="card-body unselectable" unselectable="on">
 				<h5 class="card-title"></h5>
@@ -24,18 +24,25 @@
 					<div class="d-flex">
 						<div class="dropdown">
 							<i class="btn btn-primary dropdown-toggle" id="categoryBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégorie</i>
-							<div class="dropdown-menu" id="dropdownVehicle" aria-labelledby="categoryBtn">
-								<!-- <i class="dropdown-item" id="drift">Drift</i>
-								<i class="dropdown-item" id="gripe">Gripe</i>
-								<i class="dropdown-item" id="piste">Piste</i>
-								<i class="dropdown-item" id="bike">Moto</i>
-								<i class="dropdown-item" id="allRoot">Tout terrain</i>
-								<i class="dropdown-item" id="raly">Raly</i>
-								<i class="dropdown-item" id="drag">Drag</i> -->
+							<div class="dropdown-menu" id="dropdownVehicle" aria-labelledby="categoryBtn"></div>
+						</div>
+						<p class="text-white cat-selected" id="catSelected">Aucune categorie</p>
+						<div class="dropdown">
+							<i class="btn btn-primary dropdown-toggle" id="PriceBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Prix</i>
+							<div class="dropdown-menu" id="dropdownPrice" aria-labelledby="priceBtn">
+								<i class="dropdown-item" id="priceIncreasing">Prix par ordre croissant</i>
+								<i class="dropdown-item" id="priceDecreasing">Prix par ordre décroissant</i>
 							</div>
 						</div>
-						<h5 class="text-white cat-selected" id="catSelected">Aucune categorie</h5>
-						<!-- <p style="color: rgb(18, 216, 18);" id="debug">debug: </p> -->
+						<p class="text-white cat-selected" id="typePrice">Aucun tri de prix</p>
+						<div class="input-group field-search">
+							<input type="text" name="research" id="fieldSearchVeh" class="form-control" placeholder="Rechercher un model">
+							<div class="input-group-append">
+								<i type="button" class="btn btn-success" id="ValidSearchVeh">
+									<i class="fas fa-check-circle"></i>
+								</i>
+							</div>
+						</div>
 					</div>
 					<i id="close" class="float-right fa-3x fas fa-sign-out-alt"></i>
 				</div>
