@@ -44,9 +44,10 @@ function displayVehicle(listVeh, page) {
                     <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">${listVeh[i].name}</h5>
+                        <p class="card-text">Description: <b>${listVeh[i].description}</b></p>
                         <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
                         <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
-                        <p class="card-text"><button type="button" id="action1" data-id="${i}" data-label="${listVeh[i].label}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+                        <p class="card-text"><button type="button" id="action1" data-id="${i}" data-label="${listVeh[i].model}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                     </div>
                 </div>
             </div>
@@ -131,9 +132,6 @@ $(document).ready(function(){
         mpage = displayVehicle(allVehicles, page);
         const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix croissant</p>`;
         $("#typePrice").replaceWith(typePrice);
-        console.log('prix par ordre croissant: ');
-        console.log(allVehicles);
-
     });
 
     $("#priceDecreasing").click(function () {
@@ -149,9 +147,6 @@ $(document).ready(function(){
         mpage = displayVehicle(allVehicles, page);
         const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix décroissant</p>`;
         $("#typePrice").replaceWith(typePrice);
-        console.log('prix par ordre décroissant: ');
-        console.log(allVehicles);
-
     });
 
     $("#ValidSearchVeh").click(function () {
@@ -183,7 +178,10 @@ $(document).ready(function(){
         var data = event.data;
         var listCateg = []; // stocks all category of the vehicle
         var vehs = [] // stocks all vehicles with their attributes
+        $("#shopmenu").show();
         var dropdown = $("#dropdownVehicle");
+        const catSelect = `<p class="text-white cat-selected" id="catSelected">Aucune catégorie</p>`;
+        $("#catSelected").replaceWith(catSelect);
         
         for (let i = 0; i < data.cars.length; i++) {
             if (!listCateg.includes(data.cars[i].category)) {
@@ -207,7 +205,7 @@ $(document).ready(function(){
                 `<i class="dropdown-item" id="${listCateg[i]}">${listCateg[i]}</i>`
             );
             $(`#${listCateg[i]}`).click(function () {
-                const catSelect = `<h5 class="text-white cat-selected" id="catSelected">${listCateg[i]}</h5>`;
+                const catSelect = `<p class="text-white cat-selected" id="catSelected">${listCateg[i]}</p>`;
                 const typePrice = `<p class="text-white cat-selected" id="typePrice">Aucun tri de prix</p>`;
                 $("#catSelected").replaceWith(catSelect);
                 $("#typePrice").replaceWith(typePrice);

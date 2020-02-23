@@ -105,8 +105,8 @@ $(document).ready(function(){
 
     $(".card-body").on('click', ':button', function () {
         var idVeh = findVehicleForPurchase(allVehicles, $(this).data('label'));
-        // console.log('id veh: ' + idVeh);
-        // console.log($(this).data('label'));
+        console.log(`id veh:  ${idVeh}`);
+        console.log($(this).data('label'));
     });
 
     $("#close").click(function() {
