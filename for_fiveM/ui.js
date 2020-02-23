@@ -20,61 +20,62 @@ function CloseShop() {
     $.post('http://esx_vehicleshop/CloseMenu', JSON.stringify({}));
 }
 
-function displayVehicle(listVeh) {
+function displayVehicle(listVeh, page) {
     var apage = 1;
+    var nbPage = Math.ceil(listVeh.length / 6);
     var line = 1;
-    var contentParent = $("#wrapper");
+    var wrapper = $("#wrapper");
+    wrapper.html('');
+    var pageVeh;
+    var rowBt;
+
     $(`#page-${apage}`).remove();
-    contentParent.append(`<div id="page-${apage}"></div>`);
-    var contentLine = $(`#page-${apage}`);
 
-    if (listVeh.length <=  3) {
-        contentLine.append(`<div class='row my-2' id='contentLine${line}'></div>`);
-        var contentCol = $(`#contentLine${line}`);
-
-        for (let i = 0; i < listVeh.length; i++) {
-            var forAppend = `
-                <div class="col">
-                    <div class="card" style="border:0">
-                        <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">${listVeh[i].name}</h5>
-                            <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
-                            <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
-                            <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
-                        </div>
+    for (let i = 0; i < listVeh.length; i++) {
+        if (i === 0) {
+            wrapper.append(`<div id="page-${apage}"></div>`);
+            pageVeh = $(`#page-${apage}`);
+            pageVeh.append(`<div class='row my-2' id='contentLine${line}'></div>`);
+            rowBt = $(`#contentLine${line}`);
+        }
+        var oneVehicle = `
+            <div class="col">
+                <div class="card" style="border:0">
+                    <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${listVeh[i].name}</h5>
+                        <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
+                        <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
+                        <p class="card-text"><button type="button" id="action1" data-id="${i}" data-label="${listVeh[i].label}" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
                     </div>
                 </div>
-            `;
-            contentCol.append(forAppend);
-        }
-    } else if (listVeh.length <= 6) {
-        contentLine.append(`<div class='row my-2' id='contentLine${line}'></div>`);
-        var contentCol = $(`#contentLine${line}`);
-
-        for (let i = 0; i < listVeh.length; i++) {
-            if (i <= 6) {
-                if (i === 3) {
-                    contentLine.append(`<div class='row my-2' id='contentLine${line+1}'></div>`);
-                    contentCol = $(`#contentLine${line+1}`);
-                }
-                var forAppend = `
-                    <div class="col">
-                        <div class="card" style="border:0">
-                            <img src="${listVeh[i].imglink}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">${listVeh[i].name}</h5>
-                                <p class="card-text">Categorie: <b>${listVeh[i].category}</b></p>
-                                <p class="card-text">Prix: <b>R$${listVeh[i].price}</b></p>
-                                <p class="card-text"><button type="button" id="action1" data-id="${i}" class="btn btn-primary btn-lg btn-block">Comprar</button></p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                contentCol.append(forAppend);
+            </div>
+        `;
+        if (i % 6 === 3) {
+            pageVeh.append(`<div class='row my-2' id='contentLine${line + 1}'></div>`);
+            rowBt = $(`#contentLine${line + 1}`);
+            line = line + 1;
+        } else if (i % 6 === 0) {
+            if (i !== 0) {
+                wrapper.append(`<div id="page-${apage + 1}"></div>`);
+                pageVeh = $(`#page-${apage + 1}`);
+                pageVeh.append(`<div class='row my-2' id='contentLine${line + 1}'></div>`);
+                rowBt = $(`#contentLine${line + 1}`);
+                line = line + 1;
+                apage = apage + 1;
             }
         }
+        rowBt.append(oneVehicle);
+        if (apage !== page) {
+            $("#page-" + apage).hide();
+        }
     }
+    return nbPage;
+}
+
+function findVehicleForPurchase(listVeh, labelVehicle) {
+    const purchaseVehicle = (el) => el.model === labelVehicle;
+    return listVeh.findIndex(purchaseVehicle);
 }
 
 $(document).keyup(function(e) {
@@ -87,11 +88,14 @@ $(document).ready(function(){
 
     var page = 1;
     var mpage = 0;
+    // allVehicles variable is assigned later in the code
+    var allVehicles;
 
     $(".card-body").on('click', ':button', function () {
+        var idVeh = findVehicleForPurchase(allVehicles, $(this).data('label'));
         $("#shopmenu").hide();
         $("#wrapper").html('');
-        $.post('http://esx_vehicleshop/BuyVehicle', JSON.stringify({id: $(this).data('id')}));
+        $.post('http://esx_vehicleshop/BuyVehicle', JSON.stringify({id: idVeh}));
     });
 
     $("#close").click(function() {
@@ -114,6 +118,67 @@ $(document).ready(function(){
         $("#page-"+page).show();
     });
 
+    $("#priceIncreasing").click(function () {
+        page = 1;
+        mpage = 0;
+        allVehicles = allVehicles.sort(function (a, b) {
+            if (a.price < b.price) {
+                return -1;
+            } else if (a.price > b.price) {
+                return 1;
+            }
+        });
+        mpage = displayVehicle(allVehicles, page);
+        const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix croissant</p>`;
+        $("#typePrice").replaceWith(typePrice);
+        console.log('prix par ordre croissant: ');
+        console.log(allVehicles);
+
+    });
+
+    $("#priceDecreasing").click(function () {
+        page = 1;
+        mpage = 0;
+        allVehicles = allVehicles.sort(function (a, b) {
+            if (a.price < b.price) {
+                return 1;
+            } else if (a.price > b.price) {
+                return -1;
+            }
+        });
+        mpage = displayVehicle(allVehicles, page);
+        const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix décroissant</p>`;
+        $("#typePrice").replaceWith(typePrice);
+        console.log('prix par ordre décroissant: ');
+        console.log(allVehicles);
+
+    });
+
+    $("#ValidSearchVeh").click(function () {
+        page = 1;
+        mpage = 0;
+        let contentSearch = $("#fieldSearchVeh")[0].value
+
+        /* For filter vehicle by model */
+        const vehFilter = (arr, modelName) => {
+            return arr.filter(el => el.name.toLowerCase().includes(modelName));
+        };
+        /* ****************************** */
+
+        let vehs = vehFilter(allVehicles, contentSearch);
+        if (vehs.length > 0) {
+            mpage = displayVehicle(vehs, page);
+        } else {
+            $("#wrapper").html('');
+            $("#wrapper").append(`
+                <div class='text-center text-not-match'>
+                    <h3 class='text-white'>Aucun véhicule ne corresponds à votre recherche: <strong class='text-warning'>"${contentSearch}"</strong>.</h3>
+                    <h3 class='text-white'>Vérifier l'orthographe</h3>
+                </div>
+            `);
+        }
+    });
+
     window.addEventListener('message', function(event) {
         var data = event.data;
         var listCateg = []; // stocks all category of the vehicle
@@ -128,7 +193,9 @@ $(document).ready(function(){
             }
             vehs.push(data.cars[i])
         }
-        
+
+        mpage = displayVehicle(vehs, page);
+
         /* For filter vehicle by category */
         const vehFilter = (arr, categ) => {
             return arr.filter(el => el.category === categ);
@@ -141,101 +208,111 @@ $(document).ready(function(){
             );
             $(`#${listCateg[i]}`).click(function () {
                 const catSelect = `<h5 class="text-white cat-selected" id="catSelected">${listCateg[i]}</h5>`;
+                const typePrice = `<p class="text-white cat-selected" id="typePrice">Aucun tri de prix</p>`;
                 $("#catSelected").replaceWith(catSelect);
-                displayVehicle(vehFilter(vehs, listCateg[i]));
+                $("#typePrice").replaceWith(typePrice);
+                
+                /* For reset value by default */
+                page = 1;
+                mpage = 0;
+                /* ************************** */
+
+                allVehicles = vehFilter(vehs, listCateg[i]);
+                mpage = displayVehicle(allVehicles, page);
             });
         }
+        allVehicles = vehs;
 
-        if (data.show) {
-            let apage = 1;
-            $("#shopmenu").show();
-            for (var i = 0; i < data.cars.length/6; i++) {
-                mpage = data.cars.length/6;
-                var st = i * 6 + 0;
-                var nd = i * 6 + 1;
-                var rd = i * 6 + 2;
-                var th = i * 6 + 3;
-                var kh = i * 6 + 4;
-                var lh = i * 6 + 5;
+        // if (data.show) {
+        //     let apage = 1;
+        //     $("#shopmenu").show();
+        //     for (var i = 0; i < data.cars.length/6; i++) {
+        //         mpage = data.cars.length/6;
+        //         var st = i * 6 + 0;
+        //         var nd = i * 6 + 1;
+        //         var rd = i * 6 + 2;
+        //         var th = i * 6 + 3;
+        //         var kh = i * 6 + 4;
+        //         var lh = i * 6 + 5;
 
-                $("#wrapper").append(`
-                                <div id="page-`+ apage +`">
-                                    <div class="row my-2">
-                                        <div class="col">
-                                            <div class="card" style="border:0">
-                                                <img src="`+data.cars[st].imglink+`" class="card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">`+data.cars[st].name+`</h5>
-                                                    <p class="card-text">Categorie: <b>`+data.cars[st].category+`</b></p>
-                                                    <p class="card-text">Prix: <b>R$`+data.cars[st].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action1" data-id="`+ st +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="card" style="border:0">
-                                                <img src="`+data.cars[nd].imglink+`" class="card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">`+data.cars[nd].name+`</h5>
-                                                    <p class="card-text">Categorie: <b>`+data.cars[nd].category+`</b></p>
-                                                    <p class="card-text">Prix: <b>R$`+data.cars[nd].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action2" data-id="`+ nd +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
-                                                </div>
-                                            </div>  
-                                        </div>
-                                        <div class="col">
-                                            <div class="card" style="border:0">
-                                                <img src="`+data.cars[rd].imglink+`" class="card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">`+data.cars[rd].name+`</h5>
-                                                    <p class="card-text">Categorie: <b>`+data.cars[rd].category+`</b></p>
-                                                    <p class="card-text">Prix: <b>R$`+data.cars[rd].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action3" data-id="`+ rd +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
-                                                </div>
-                                            </div>    
-                                        </div>
-                                    </div>
-                                    <div class="row my-2">
-                                        <div class="col">
-                                            <div class="card" style="border:0">
-                                                <img src="`+data.cars[th].imglink+`" class="card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">`+data.cars[th].name+`</h5>
-                                                    <p class="card-text">Categorie: <b>`+data.cars[th].category+`</b></p>
-                                                    <p class="card-text">Prix: <b>R$`+data.cars[th].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action1" data-id="`+ th +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="card" style="border:0">
-                                                <img src="`+data.cars[kh].imglink+`" class="card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">`+data.cars[kh].name+`</h5>
-                                                    <p class="card-text">Categorie: <b>`+data.cars[kh].category+`</b></p>
-                                                    <p class="card-text">Prix: <b>R$`+data.cars[kh].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action2" data-id="`+ kh +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
-                                                </div>
-                                            </div>  
-                                        </div>
-                                        <div class="col">
-                                            <div class="card" style="border:0">
-                                                <img src="`+data.cars[lh].imglink+`" class="card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">`+data.cars[lh].name+`</h5>
-                                                    <p class="card-text">Categorie: <b>`+data.cars[lh].category+`</b></p>
-                                                    <p class="card-text">Prix: <b>R$`+data.cars[lh].price+`</b></p>
-                                                    <p class="card-text"><button type="button" id="action3" data-id="`+ lh +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
-                                                </div>
-                                            </div>    
-                                        </div>
-                                    </div>
-                                </div>`);
-                            if (apage !== page) {
-                                $("#page-" + apage).hide();
-                            }
-                            apage = apage +1;
-            }
-        }    
+        //         $("#wrapper").append(`
+        //                         <div id="page-`+ apage +`">
+        //                             <div class="row my-2">
+        //                                 <div class="col">
+        //                                     <div class="card" style="border:0">
+        //                                         <img src="`+data.cars[st].imglink+`" class="card-img-top" alt="...">
+        //                                         <div class="card-body">
+        //                                             <h5 class="card-title">`+data.cars[st].name+`</h5>
+        //                                             <p class="card-text">Categorie: <b>`+data.cars[st].category+`</b></p>
+        //                                             <p class="card-text">Prix: <b>R$`+data.cars[st].price+`</b></p>
+        //                                             <p class="card-text"><button type="button" id="action1" data-id="`+ st +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+        //                                         </div>
+        //                                     </div>
+        //                                 </div>
+        //                                 <div class="col">
+        //                                     <div class="card" style="border:0">
+        //                                         <img src="`+data.cars[nd].imglink+`" class="card-img-top" alt="...">
+        //                                         <div class="card-body">
+        //                                             <h5 class="card-title">`+data.cars[nd].name+`</h5>
+        //                                             <p class="card-text">Categorie: <b>`+data.cars[nd].category+`</b></p>
+        //                                             <p class="card-text">Prix: <b>R$`+data.cars[nd].price+`</b></p>
+        //                                             <p class="card-text"><button type="button" id="action2" data-id="`+ nd +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+        //                                         </div>
+        //                                     </div>  
+        //                                 </div>
+        //                                 <div class="col">
+        //                                     <div class="card" style="border:0">
+        //                                         <img src="`+data.cars[rd].imglink+`" class="card-img-top" alt="...">
+        //                                         <div class="card-body">
+        //                                             <h5 class="card-title">`+data.cars[rd].name+`</h5>
+        //                                             <p class="card-text">Categorie: <b>`+data.cars[rd].category+`</b></p>
+        //                                             <p class="card-text">Prix: <b>R$`+data.cars[rd].price+`</b></p>
+        //                                             <p class="card-text"><button type="button" id="action3" data-id="`+ rd +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+        //                                         </div>
+        //                                     </div>    
+        //                                 </div>
+        //                             </div>
+        //                             <div class="row my-2">
+        //                                 <div class="col">
+        //                                     <div class="card" style="border:0">
+        //                                         <img src="`+data.cars[th].imglink+`" class="card-img-top" alt="...">
+        //                                         <div class="card-body">
+        //                                             <h5 class="card-title">`+data.cars[th].name+`</h5>
+        //                                             <p class="card-text">Categorie: <b>`+data.cars[th].category+`</b></p>
+        //                                             <p class="card-text">Prix: <b>R$`+data.cars[th].price+`</b></p>
+        //                                             <p class="card-text"><button type="button" id="action1" data-id="`+ th +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+        //                                         </div>
+        //                                     </div>
+        //                                 </div>
+        //                                 <div class="col">
+        //                                     <div class="card" style="border:0">
+        //                                         <img src="`+data.cars[kh].imglink+`" class="card-img-top" alt="...">
+        //                                         <div class="card-body">
+        //                                             <h5 class="card-title">`+data.cars[kh].name+`</h5>
+        //                                             <p class="card-text">Categorie: <b>`+data.cars[kh].category+`</b></p>
+        //                                             <p class="card-text">Prix: <b>R$`+data.cars[kh].price+`</b></p>
+        //                                             <p class="card-text"><button type="button" id="action2" data-id="`+ kh +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+        //                                         </div>
+        //                                     </div>  
+        //                                 </div>
+        //                                 <div class="col">
+        //                                     <div class="card" style="border:0">
+        //                                         <img src="`+data.cars[lh].imglink+`" class="card-img-top" alt="...">
+        //                                         <div class="card-body">
+        //                                             <h5 class="card-title">`+data.cars[lh].name+`</h5>
+        //                                             <p class="card-text">Categorie: <b>`+data.cars[lh].category+`</b></p>
+        //                                             <p class="card-text">Prix: <b>R$`+data.cars[lh].price+`</b></p>
+        //                                             <p class="card-text"><button type="button" id="action3" data-id="`+ lh +`" class="btn btn-primary btn-lg btn-block">Acheter</button></p>
+        //                                         </div>
+        //                                     </div>    
+        //                                 </div>
+        //                             </div>
+        //                         </div>`);
+        //                     if (apage !== page) {
+        //                         $("#page-" + apage).hide();
+        //                     }
+        //                     apage = apage +1;
+        //     }
+        // }    
     });
 });
