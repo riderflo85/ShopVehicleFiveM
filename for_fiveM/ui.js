@@ -91,6 +91,8 @@ $(document).ready(function(){
     var mpage = 0;
     // allVehicles variable is assigned later in the code
     var allVehicles;
+    var vehiclesFilter;
+    var isFilter = false;
 
     $(".card-body").on('click', ':button', function () {
         var idVeh = findVehicleForPurchase(allVehicles, $(this).data('label'));
@@ -122,14 +124,20 @@ $(document).ready(function(){
     $("#priceIncreasing").click(function () {
         page = 1;
         mpage = 0;
-        allVehicles = allVehicles.sort(function (a, b) {
+        let vehsFilters = [];
+
+        for (const el of allVehicles) {
+            vehsFilters.push(el);
+        }
+
+        vehsFilters.sort(function (a, b) {
             if (a.price < b.price) {
                 return -1;
             } else if (a.price > b.price) {
                 return 1;
             }
         });
-        mpage = displayVehicle(allVehicles, page);
+        mpage = displayVehicle(vehsFilters, page);
         const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix croissant</p>`;
         $("#typePrice").replaceWith(typePrice);
     });
@@ -137,14 +145,20 @@ $(document).ready(function(){
     $("#priceDecreasing").click(function () {
         page = 1;
         mpage = 0;
-        allVehicles = allVehicles.sort(function (a, b) {
+        let vehsFilters = [];
+
+        for (const el of allVehicles) {
+            vehsFilters.push(el);
+        }
+
+        vehsFilters.sort(function (a, b) {
             if (a.price < b.price) {
                 return 1;
             } else if (a.price > b.price) {
                 return -1;
             }
         });
-        mpage = displayVehicle(allVehicles, page);
+        mpage = displayVehicle(vehsFilters, page);
         const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix décroissant</p>`;
         $("#typePrice").replaceWith(typePrice);
     });
@@ -215,8 +229,8 @@ $(document).ready(function(){
                 mpage = 0;
                 /* ************************** */
 
-                allVehicles = vehFilter(vehs, listCateg[i]);
-                mpage = displayVehicle(allVehicles, page);
+                vehiclesFilter = vehFilter(vehs, listCateg[i]);
+                mpage = displayVehicle(vehiclesFilter, page);
             });
         }
         allVehicles = vehs;

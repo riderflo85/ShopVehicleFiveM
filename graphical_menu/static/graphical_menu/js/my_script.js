@@ -95,6 +95,7 @@ $(document).ready(function(){
     var mpage = 0;
     // allVehicles variable is assigned later in the code
     var allVehicles;
+    var vehiclesFilter;
 
     // $(".card-body").on('click', ':button', function () {
     //     var idVeh = findVehicleForPurchase(allVehicles, $(this).data('label'));
@@ -107,6 +108,7 @@ $(document).ready(function(){
         var idVeh = findVehicleForPurchase(allVehicles, $(this).data('label'));
         console.log(`id veh:  ${idVeh}`);
         console.log($(this).data('label'));
+        console.log($(this).data('id'));
     });
 
     $("#close").click(function() {
@@ -131,6 +133,7 @@ $(document).ready(function(){
     
     $("#btnValid").click(function () {
         var dropdown = $("#dropdownVehicle");
+        dropdown.html('');
         var csrftoken = getCookie('csrftoken');
 
         $.ajaxSetup({
@@ -183,11 +186,12 @@ $(document).ready(function(){
                         mpage = 0;
                         /* ************************** */
 
-                        allVehicles = vehFilter(vehs, listCateg[i]);
-                        mpage = displayVehicle(allVehicles, page);
+                        vehiclesFilter = vehFilter(vehs, listCateg[i]);
+                        mpage = displayVehicle(vehiclesFilter, page);
                     });
                 }
                 allVehicles = vehs;
+                console.log(allVehicles);
             },
             error: function(error) {
                 console.warn(error);
@@ -198,36 +202,50 @@ $(document).ready(function(){
     $("#priceIncreasing").click(function () {
         page = 1;
         mpage = 0;
-        allVehicles = allVehicles.sort(function (a, b) {
+        let vehsFilters = [];
+
+        for (const el of allVehicles) {
+            vehsFilters.push(el);
+        }
+
+        vehsFilters.sort(function (a, b) {
             if (a.price < b.price) {
                 return -1;
             } else if (a.price > b.price) {
                 return 1;
             }
         });
-        mpage = displayVehicle(allVehicles, page);
+        mpage = displayVehicle(vehsFilters, page);
         const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix croissant</p>`;
         $("#typePrice").replaceWith(typePrice);
         console.log('prix par ordre croissant: ');
-        console.log(allVehicles);
+        console.log(vehsFilters);
 
     });
 
     $("#priceDecreasing").click(function () {
         page = 1;
         mpage = 0;
-        allVehicles = allVehicles.sort(function (a, b) {
+        let vehsFilters = [];
+
+        for (const el of allVehicles) {
+            vehsFilters.push(el);
+        }
+
+        vehsFilters.sort(function (a, b) {
             if (a.price < b.price) {
                 return 1;
             } else if (a.price > b.price) {
                 return -1;
             }
         });
-        mpage = displayVehicle(allVehicles, page);
+        mpage = displayVehicle(vehsFilters, page);
         const typePrice = `<p class="text-white cat-selected" id="typePrice">Prix décroissant</p>`;
         $("#typePrice").replaceWith(typePrice);
         console.log('prix par ordre décroissant: ');
+        console.log(vehsFilters);
         console.log(allVehicles);
+        
 
     });
 
